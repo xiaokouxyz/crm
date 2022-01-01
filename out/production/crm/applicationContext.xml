@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--为service包下的添加组件扫描器-->
+    <context:component-scan base-package="com.kou.crm.settings.service" />
+
+    <!--引入数据库资源-->
+    <context:property-placeholder location="classpath:jdbc.properties" />
+
+    <!--声明数据源-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.user}" />
+        <property name="password" value="${jdbc.password}" />
+        <property name="maxActive" value="${jdbc.max}" />
+    </bean>
+
+    <!--创建SqlSessionFactory对象-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--数据源-->
+        <property name="dataSource" ref="dataSource" />
+        <!--mybatis信息-->
+        <property name="configLocation" value="classpath:mybatis-config.xml" />
+    </bean>
+
+    <!--创建sqlMapper-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--获取sqlSession对象-->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+        <!--要为哪个包里的接口创建对象-->
+        <property name="basePackage" value="com.kou.crm.settings.dao" />
+    </bean>
+
+    <!--事务处理-->
+    <!--声明事务管理器-->
+    <bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!--事务属性-->
+    <tx:advice id="transactionInterceptor" transaction-manager="dataSourceTransactionManager">
+        <!--配置事务属性-->
+        <tx:attributes>
+            <!--执行添加方法-->
+            <tx:method name="Login" propagation="REQUIRED" isolation="DEFAULT"
+                       rollback-for="java.lang.RuntimeException,com.kou.crm.exception.LoginException"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!--配置AOP-->
+    <aop:config>
+        <!--哪些类，以及方法要使用事务-->
+        <aop:pointcut id="loginPointcut" expression="execution(* *..service..*.*(..))"/>
+        <!--配置增强器-->
+        <aop:advisor advice-ref="transactionInterceptor" pointcut-ref="loginPointcut"/>
+    </aop:config>
+
+</beans>

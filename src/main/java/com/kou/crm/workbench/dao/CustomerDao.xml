@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kou.crm.workbench.dao.CustomerDao">
+    <select id="getCustomerByName" resultType="Customer">
+        select id,owner,name,website,phone,createBy,createTime,editBy,editTime,contactSummary,nextContactTime,description,address
+        from tbl_customer
+        where name = #{companyName}
+    </select>
+
+    <insert id="saveCustomer">
+        insert into tbl_customer(id,owner,name,website,phone,createBy,createTime,contactSummary,nextContactTime,description,address)
+        values (#{id},#{owner},#{name},#{website},#{phone},#{createBy},#{createTime},#{contactSummary},#{nextContactTime},#{description},#{address})
+    </insert>
+
+    <select id="getTotalByCondition" resultType="java.lang.Integer">
+        select count(*)
+        from tbl_customer cus
+        join tbl_user u
+        on cus.owner = u.id
+        <where>
+            <if test="customer.name!=null and customer.name!=''">
+                and cus.name like '%' #{customer.name} '%'
+            </if>
+            <if test="customer.owner!=null and customer.owner!=''">
+                and u.name like '%' #{customer.owner} '%'
+            </if>
+            <if test="customer.phone!=null and customer.phone!=''">
+                and cus.phone like '%' #{customer.phone} '%'
+            </if>
+            <if test="customer.website!=null and customer.website!=''">
+                and cus.website like '%' #{customer.website} '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="getDataListByCondition" resultType="Customer">
+        select
+            cus.id,
+            u.name as owner,
+            cus.name,
+            cus.website,
+            cus.phone,
+            cus.createBy,
+            cus.createTime,
+            cus.editBy,
+            cus.editTime,
+            cus.contactSummary,
+            cus.nextContactTime,
+            cus.description,
+            cus.address
+        from tbl_customer cus
+        join tbl_user u
+        on cus.owner = u.id
+        <where>
+            <if test="customer.name!=null and customer.name!=''">
+                and cus.name like '%' #{customer.name} '%'
+            </if>
+            <if test="customer.owner!=null and customer.owner!=''">
+                and u.name like '%' #{customer.owner} '%'
+            </if>
+            <if test="customer.phone!=null and customer.phone!=''">
+                and cus.phone like '%' #{customer.phone} '%'
+            </if>
+            <if test="customer.website!=null and customer.website!=''">
+                and cus.website like '%' #{customer.website} '%'
+            </if>
+        </where>
+        order by createTime desc
+        limit #{skipCount},#{pageSize}
+    </select>
+    
+    <select id="getCustomerName" resultType="java.lang.String">
+        select name
+        from tbl_customer
+        where name like '%' #{name} '%'
+    </select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
