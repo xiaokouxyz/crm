@@ -44,11 +44,6 @@ public class UserServiceImpl implements UserService {
             throw new LoginException("账号已锁定");
         }
 
-        //  判断IP地址
-        String allowIps = user.getAllowIps();
-        if ( !allowIps.contains(ip)){
-            throw new LoginException("IP地址受限");
-        }
         return user;
     }
 
