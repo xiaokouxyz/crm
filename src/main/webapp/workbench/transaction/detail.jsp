@@ -62,7 +62,6 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
 	//默认情况下取消和保存按钮是隐藏的
 	var cancelAndSaveBtnDefault = true;
-	
 	$(function(){
 		$("#remark").focus(function(){
 			if(cancelAndSaveBtnDefault){
@@ -177,53 +176,55 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
 	 */
 	function changeStage(stage,i){
-		$.ajax({
-			url: "workbench/transaction/changeState.do",
-			data: {
-				"id": "${tran.id}",
-				"stage": stage,
-				"money": "${tran.money}",
-				"expectedDate": "${tran.expectedDate}",
-			},
-			type: "post",
-			success: function (data){
-				/*
-					data
-						["success":true/false,"msg":xxx,"tran":{交易1}]
-				 */
-				if (data.success){
-					//	改变阶段成功后，需要在详细信息页上局部刷新 刷新阶段，可能性，修改人，修改时间
-					$("#stage").html(data.tran.stage);
+		if (confirm("亲亲，您确定要改变此阶段？")){
+			$.ajax({
+				url: "workbench/transaction/changeState.do",
+				data: {
+					"id": "${tran.id}",
+					"stage": stage,
+					"money": "${tran.money}",
+					"expectedDate": "${tran.expectedDate}",
+				},
+				type: "post",
+				success: function (data){
+					/*
+                        data
+                            ["success":true/false,"msg":xxx,"tran":{交易1}]
+                     */
+					if (data.success){
+						//	改变阶段成功后，需要在详细信息页上局部刷新 刷新阶段，可能性，修改人，修改时间
+						$("#stage").html(data.tran.stage);
 
-					$("#editBy").html(data.tran.editBy);
-					$("#editTime").html(data.tran.editTime);
+						$("#editBy").html(data.tran.editBy);
+						$("#editTime").html(data.tran.editTime);
 
-					var json = {
-						<%
-                            for (String key : set) {
-                                String value = pMap.get(key);
-                        %>
-						"<%=key%>" : <%=value%>,
-						<%
-                            }
-                        %>
-					};
+						var json = {
+							<%
+                                for (String key : set) {
+                                    String value = pMap.get(key);
+                            %>
+							"<%=key%>" : <%=value%>,
+							<%
+                                }
+                            %>
+						};
 
-					var stage2 = $("#stage").html();
-					var possibility2 = json[stage2];
-					$("#possibility").html(possibility2);
+						var stage2 = $("#stage").html();
+						var possibility2 = json[stage2];
+						$("#possibility").html(possibility2);
 
-					showTranHistoryList();
+						showTranHistoryList();
 
-					//	改变阶段成功后
-					//	(2)将所有的阶段图标重新判断，重新赋予样式及颜色
-					changeIcon(stage,i);
+						//	改变阶段成功后
+						//	(2)将所有的阶段图标重新判断，重新赋予样式及颜色
+						changeIcon(stage,i);
 
-				}else {
-					alert(data.msg);
+					}else {
+						alert(data.msg);
+					}
 				}
-			}
-		})
+			})
+		}
 	}
 
 	function changeIcon(stage,ind){
@@ -303,6 +304,16 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					$("#"+i).css("color","#000000");
 				}
 			}
+			//	遍历后两个
+			for (var i = point; i < <%=dicValueList.size()%>; i++) {
+					//	黑叉---------------
+					//	移除掉原有的样式
+					$("#"+i).removeClass();
+					//	添加新样式
+					$("#"+i).addClass("glyphicon glyphicon-remove mystage");
+					//	为新样式赋予颜色
+					$("#"+i).css("color","#000000");
+			}
 
 		}
 	}
@@ -322,8 +333,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			<h3>${tran.customerId}-${tran.name} <small>￥${tran.money}</small></h3>
 		</div>
 		<div style="position: relative; height: 50px; width: 250px;  top: -72px; left: 700px;">
-			<button type="button" class="btn btn-default" onclick="window.location.href='edit.html';"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
-			<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+
 		</div>
 	</div>
 
@@ -511,7 +521,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		</div>
 		<div style="position: relative; left: 40px; height: 30px; top: 30px;">
 			<div style="width: 300px; color: gray;">类型</div>
-			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>${tran.type}</b></div>
+			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>&nbsp;${tran.type}</b></div>
 			<div style="width: 300px;position: relative; left: 450px; top: -40px; color: gray;">可能性</div>
 			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b id="possibility">&nbsp;</b></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px;"></div>
@@ -562,51 +572,6 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			<div style="width: 300px; color: gray;">下次联系时间</div>
 			<div style="width: 500px;position: relative; left: 200px; top: -20px;"><b>${tran.nextContactTime}&nbsp;</b></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -20px;"></div>
-		</div>
-	</div>
-	
-	<!-- 备注 -->
-	<div style="position: relative; top: 100px; left: 40px;">
-		<div class="page-header">
-			<h4>备注</h4>
-		</div>
-		
-		<!-- 备注1 -->
-		<div class="remarkDiv" style="height: 60px;">
-			<img title="zhangsan" src="image/user-thumbnail.png" style="width: 30px; height:30px;">
-			<div style="position: relative; top: -40px; left: 40px;" >
-				<h5>哎呦！</h5>
-				<font color="gray">交易</font> <font color="gray">-</font> <b>动力节点-交易01</b> <small style="color: gray;"> 2017-01-22 10:10:10 由zhangsan</small>
-				<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">
-					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>
-				</div>
-			</div>
-		</div>
-		
-		<!-- 备注2 -->
-		<div class="remarkDiv" style="height: 60px;">
-			<img title="zhangsan" src="image/user-thumbnail.png" style="width: 30px; height:30px;">
-			<div style="position: relative; top: -40px; left: 40px;" >
-				<h5>呵呵！</h5>
-				<font color="gray">交易</font> <font color="gray">-</font> <b>动力节点-交易01</b> <small style="color: gray;"> 2017-01-22 10:20:10 由zhangsan</small>
-				<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">
-					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #E6E6E6;"></span></a>
-					&nbsp;&nbsp;&nbsp;&nbsp;
-					<a class="myHref" href="javascript:void(0);"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #E6E6E6;"></span></a>
-				</div>
-			</div>
-		</div>
-		
-		<div id="remarkDiv" style="background-color: #E6E6E6; width: 870px; height: 90px;">
-			<form role="form" style="position: relative;top: 10px; left: 10px;">
-				<textarea id="remark" class="form-control" style="width: 850px; resize : none;" rows="2"  placeholder="添加备注..."></textarea>
-				<p id="cancelAndSaveBtn" style="position: relative;left: 737px; top: 10px; display: none;">
-					<button id="cancelBtn" type="button" class="btn btn-default">取消</button>
-					<button type="button" class="btn btn-primary">保存</button>
-				</p>
-			</form>
 		</div>
 	</div>
 	

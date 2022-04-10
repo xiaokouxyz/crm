@@ -21,4 +21,22 @@ public interface TranDao {
     Integer getTotal();
 
     List<Map<String, Object>> getCharts();
+
+    List<Tran> getTranList(String id);
+
+    Integer getTranCountByAids(String[] id);
+
+    Integer deleteTranByAids(String[] id);
+
+    Integer deleteTran(String id);
+
+    Integer updateTran(Tran tran);
+
+    Map<String, String> getSomeIds(String tranId);
+
+    Integer getTranCountByTranIds(String[] id);
+
+    Integer deleteTranByTranIds(String[] id);
+
+    List<Tran> getTranListByContactId(String id);
 }

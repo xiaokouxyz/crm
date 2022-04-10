@@ -29,7 +29,6 @@ public class LoginController {
 
         //  获取浏览器端的IP地址
         String ip = request.getRemoteAddr();
-        System.out.println(ip);
 
         //  调用userService的方法
         User user = userService.Login(loginAct,loginPwd,ip);

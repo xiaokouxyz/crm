@@ -154,6 +154,10 @@
         where t.id = #{tranId}
     </select>
 
+    <select id="getSomeIds" resultType="java.util.Map">
+        select customerId,activityId,contactsId from tbl_tran where id = #{tranId}
+    </select>
+
     <update id="changeState">
         update tbl_tran set stage=#{stage},editBy=#{editBy},editTime=#{editTime} where id=#{id}
     </update>
@@ -167,6 +171,98 @@
                count(*) as value,stage as name
         from tbl_tran
         group by stage
+    </select>
+
+    <select id="getTranList" resultType="Tran">
+        select
+            t.id,
+            t.money,
+            t.name,
+            t.expectedDate,
+            cus.name as customerId,
+            t.stage,
+            t.type
+        from tbl_tran t
+        join tbl_customer cus
+          on t.customerId = cus.id
+        where t.customerId = #{id}
+    </select>
+
+    <select id="getTranCountByAids" resultType="java.lang.Integer">
+        select count(*)
+        from tbl_tran
+        where customerId in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </select>
+
+    <delete id="deleteTranByAids">
+        delete from tbl_tran
+        where customerId in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteTran">
+        delete from tbl_tran where id=#{id}
+    </delete>
+
+    <update id="updateTran">
+        update tbl_tran set
+            owner=#{owner},
+            money=#{money},
+            name=#{name},
+            expectedDate=#{expectedDate},
+            customerId=#{customerId},
+            stage=#{stage},
+            type=#{type},
+            source=#{source},
+            activityId=#{activityId},
+            contactsId=#{contactsId},
+            editBy=#{editBy},
+            editTime=#{editTime},
+            description=#{description},
+            contactSummary=#{contactSummary},
+            nextContactTime=#{nextContactTime}
+        where id=#{id}
+    </update>
+
+
+    <select id="getTranCountByTranIds" resultType="java.lang.Integer">
+        select count(*)
+        from tbl_tran
+        where id in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </select>
+
+    <delete id="deleteTranByTranIds">
+        delete from tbl_tran
+        where id in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="getTranListByContactId" resultType="Tran">
+        select
+            t.id,
+            t.money,
+            t.name,
+            t.expectedDate,
+            cus.name as customerId,
+            t.stage,
+            t.type
+        from tbl_tran t
+        join tbl_customer cus
+        on t.customerId = cus.id
+        join tbl_contacts con
+        on t.contactsId = con.id
+        where t.contactsId = #{id}
     </select>
 </mapper>
 

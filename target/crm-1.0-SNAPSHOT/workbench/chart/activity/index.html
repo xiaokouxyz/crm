@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="../../../ECharts/echarts.min.js"></script>
+    <script src="../../../jquery/vue/vue.js"></script>
+    <script src="../../../jquery/vue/axios.min.js"></script>
+</head>
+<body>
+
+<div id="app" style="width: 700px;height: 600px" ></div>
+
+<script>
+
+    var vm = new Vue({
+
+        el: "#app",
+        data: {
+            charts: ""
+        },
+        methods: {
+
+            getCharts:function (){
+                axios({
+                    method: "get",
+                    url: "/crm/workbench/activity/getCharts.do",
+                }).then(result=>{
+
+                    var myChart = echarts.init(document.getElementById('app'));
+
+
+                    option= {
+                        legend: {
+                            top: 'bottom'
+                        },
+                        series: [
+                            {
+                                name: '市场活动饼状图',
+                                type: 'pie',
+                                radius: [50, 200],
+                                center: ['50%', '50%'],
+                                roseType: 'area',
+                                itemStyle: {
+                                    borderRadius: 8
+                                },
+                                data: result.data.dataList,
+                                /*[
+                                    { value: 40, name: 'rose 1' },
+                                    { value: 38, name: 'rose 2' },
+                                    { value: 32, name: 'rose 3' },
+                                    { value: 30, name: 'rose 4' },
+                                    { value: 28, name: 'rose 5' },
+                                    { value: 26, name: 'rose 6' },
+                                    { value: 22, name: 'rose 7' },
+                                    { value: 18, name: 'rose 8' }
+                                ]*/
+                            }
+                        ]
+                    };
+
+                    // 使用刚指定的配置项和数据显示图表。
+                    myChart.setOption(option);
+
+                })
+            }
+        },
+        mounted(){
+            //自动加载indexs方法
+            this.getCharts();
+        }
+    })
+
+</script>
+
+</body>
+</html>

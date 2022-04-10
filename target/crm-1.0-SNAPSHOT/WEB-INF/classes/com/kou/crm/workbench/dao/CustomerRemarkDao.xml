@@ -8,6 +8,51 @@
         insert into tbl_customer_remark(id,noteContent,createBy,createTime,editBy,editTime,editFlag,customerId)
         values (#{id},#{noteContent},#{createBy},#{createTime},#{editBy},#{editTime},#{editFlag},#{customerId})
     </insert>
+
+    <select id="showCustomerRemarkList" resultType="CustomerRemark">
+        select
+            id,
+            noteContent,
+            createBy,
+            createTime,
+            editBy,
+            editTime,
+            editFlag,
+            customerId
+        from tbl_customer_remark
+        where customerId=#{id}
+    </select>
+
+    <delete id="deleteRemark">
+        delete from tbl_customer_remark where id=#{id}
+    </delete>
+
+    <update id="updateRemark">
+        update tbl_customer_remark set
+            noteContent=#{noteContent},
+            editBy=#{editBy},
+            editTime=#{editTime},
+            editFlag=#{editFlag}
+        where id=#{id}
+    </update>
+
+
+    <select id="getCountByAids" resultType="java.lang.Integer">
+        select count(*)
+        from tbl_customer_remark
+        where customerId in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </select>
+
+    <delete id="deleteByAids">
+        delete from tbl_customer_remark
+        where customerId in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>
 
 

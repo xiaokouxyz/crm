@@ -8,6 +8,39 @@
         insert into tbl_contacts_activity_relation (id,contactsId,activityId)
         values (#{id},#{contactsId},#{activityId})
     </insert>
+
+    <select id="getCountByConId" resultType="java.lang.Integer">
+        select count(*) from tbl_contacts_activity_relation where contactsId=#{id}
+    </select>
+
+    <delete id="deleteByConId">
+        delete from tbl_contacts_activity_relation where contactsId=#{id}
+    </delete>
+
+    <select id="getCountByConIds" resultType="java.lang.Integer">
+        select count(*) from tbl_contacts_activity_relation where contactsId in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </select>
+
+    <delete id="deleteByConIds">
+        delete from tbl_contacts_activity_relation where contactsId in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="unboundByTcarid">
+        delete from tbl_contacts_activity_relation car
+        where
+            car.activityId = #{tcarId}
+    </delete>
+
+    <insert id="boundActivity">
+        insert into tbl_contacts_activity_relation(id,contactsId,activityId)
+        values(#{id},#{contactsId},#{activityId})
+    </insert>
 </mapper>
 
 

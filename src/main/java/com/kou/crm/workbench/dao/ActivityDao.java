@@ -1,6 +1,8 @@
 package com.kou.crm.workbench.dao;
 
 import com.kou.crm.workbench.domain.Activity;
+import com.kou.crm.workbench.domain.Contacts;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -25,4 +27,14 @@ public interface ActivityDao {
     List<Activity> getActivityListByNameAndNotByClueId(Map<String, String> map);
 
     List<Activity> getActivityListByName(String activityName);
+
+    List<Activity> getActivityListByNameAndNotByActivityId(@Param("activityName") String activityName,@Param("activityId") String activityId);
+
+    List<Activity> getActivityByContactId(String id);
+
+    List<Activity> getActivityListByNameAndNotByContactsId(@Param("activityName") String activityName,@Param("contactsId") String contactsId);
+
+    Integer getTotal();
+
+    List<Map<String, Object>> getCharts();
 }

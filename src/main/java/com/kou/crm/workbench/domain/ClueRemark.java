@@ -59,8 +59,5 @@ public class ClueRemark {
 	public void setClueId(String clueId) {
 		this.clueId = clueId;
 	}
-	
-	
 
-	
 }

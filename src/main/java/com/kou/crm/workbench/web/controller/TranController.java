@@ -6,12 +6,14 @@ import com.kou.crm.settings.service.UserService;
 import com.kou.crm.utils.DateTimeUtil;
 import com.kou.crm.utils.UUIDUtil;
 import com.kou.crm.vo.PaginationVo;
+import com.kou.crm.workbench.domain.Activity;
 import com.kou.crm.workbench.domain.Tran;
 import com.kou.crm.workbench.domain.TranHistory;
 import com.kou.crm.workbench.service.CustomerService;
 import com.kou.crm.workbench.service.TranService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -121,6 +123,50 @@ public class TranController {
     public Map<String,Object> getCharts(){
         Map<String,Object> map = tranService.getCharts();
 
+        return map;
+    }
+
+    //  获取
+    @RequestMapping("/getActivityListByNameAndNotByActivityId.do")
+    @ResponseBody
+    public List<Activity> getActivityListByNameAndNotByActivityId(String activityName,String activityId){
+
+        List<Activity> list = tranService.getActivityListByNameAndNotByActivityId(activityName,activityId);
+        return list;
+    }
+
+    @RequestMapping("/edit.do")
+    public String edit(Model model, String tranId){
+
+        Map<String,String> map = tranService.getSomeIds(tranId);
+        Tran tran = tranService.edit(tranId);
+        List<User> userList = userService.getUserList();
+        model.addAttribute("userList",userList);
+        model.addAttribute("tran",tran);
+        model.addAttribute("someIds",map);
+        return "edit.jsp";
+    }
+
+    //  修改更新交易
+    @RequestMapping("/updateTransaction.do")
+    public ModelAndView updateTransaction(Tran tran, String customerName) throws TransactionException {
+        ModelAndView modelAndView = new ModelAndView();
+        String editTime = DateTimeUtil.getSysTime();
+        tran.setEditTime(editTime);
+        boolean flag = tranService.updateTransaction(tran,customerName);
+        if (flag){
+            modelAndView.setViewName("redirect:index.jsp");
+        }
+        return modelAndView;
+    }
+
+    //  删除交易
+    @RequestMapping("/deleteTran.do")
+    @ResponseBody
+    public Map<String,Object> deleteTran(String[] id) throws TransactionException {
+        Map<String,Object> map = new HashMap<>();
+        boolean success = tranService.deleteTran(id);
+        map.put("success",success);
         return map;
     }
 }

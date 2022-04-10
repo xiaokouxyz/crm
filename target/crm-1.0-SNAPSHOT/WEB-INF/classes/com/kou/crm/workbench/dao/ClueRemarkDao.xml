@@ -13,6 +13,41 @@
     <delete id="deleteClueRemark">
         delete from tbl_clue_remark where id=#{id}
     </delete>
+
+    <insert id="saveClueRemark">
+        insert into tbl_clue_remark(id,noteContent,createBy,createTime,editFlag,clueId)
+        values (#{id},#{noteContent},#{createBy},#{createTime},#{editFlag},#{clueId})
+    </insert>
+
+    <delete id="deleteRemark">
+        delete from tbl_clue_remark where id=#{id}
+    </delete>
+
+    <update id="updateRemark">
+        update tbl_clue_remark set
+            noteContent=#{noteContent},
+            editBy=#{editBy},
+            editTime=#{editTime},
+            editFlag=#{editFlag}
+        where id=#{id}
+    </update>
+
+    <select id="getCountByAids" resultType="java.lang.Integer">
+        select count(*)
+        from tbl_clue_remark
+        where clueId in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </select>
+
+    <delete id="deleteByAids">
+        delete from tbl_clue_remark
+        where clueId in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>
 
 

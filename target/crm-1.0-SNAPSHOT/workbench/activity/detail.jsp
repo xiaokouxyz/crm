@@ -183,31 +183,34 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 	}
 
 	function deleteRemark(id){
-		$.ajax({
-			url: "workbench/activity/deleteRemark.do",
-			data: {
-				"id": id
-			},
-			type: "post",
-			dataType: "json",
-			success: function (data){
-				/*
-					data
-						["success":true/false,"msg":"成功还是失败"]
-				 */
-				if (data.success){
-					//	刷新列表
-					//这种做法不行，记录使用的是before方法，每一次删除之后，页面上都会保留原有的数据
-					//showRemarkList();
+		if (confirm("亲亲，确定要删除吗？")){
+			$.ajax({
+				url: "workbench/activity/deleteRemark.do",
+				data: {
+					"id": id
+				},
+				type: "post",
+				dataType: "json",
+				success: function (data){
+					/*
+                        data
+                            ["success":true/false,"msg":"成功还是失败"]
+                     */
+					if (data.success){
+						//	刷新列表
+						//这种做法不行，记录使用的是before方法，每一次删除之后，页面上都会保留原有的数据
+						//showRemarkList();
 
-					//找到需要删除记录的div，将div移 除掉
-					$("#"+ id).remove();
+						//找到需要删除记录的div，将div移 除掉
+						$("#"+ id).remove();
 
-				}else {
-					alert(data.msg);
+					}else {
+						alert(data.msg);
+					}
 				}
-			}
-		})
+			})
+
+		}
 	}
 
 
@@ -270,8 +273,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			<h3>市场活动-${activity.name} <small>${activity.startDate} ~ ${activity.endDate}</small></h3>
 		</div>
 		<div style="position: relative; height: 50px; width: 250px;  top: -72px; left: 700px;">
-			<button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
-			<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+
 		</div>
 	</div>
 	

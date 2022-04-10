@@ -23,6 +23,16 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
 	$(function(){
 
+		//	时取器
+		$(".time").datetimepicker({
+			minView: "month",
+			language:  'zh-CN',
+			format: 'yyyy-mm-dd',
+			autoclose: true,
+			todayBtn: true,
+			pickerPosition: "bottom-right"
+		});
+
 		//	为创建按钮绑定事件，打开添加操作的模态窗口
 		$("#addBtn").click(function (){
 
@@ -88,7 +98,6 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					//	data       {"success":true/false}
 					if (data.success){
 						//	添加成功
-						alert(data.msg)
 						//	刷新市场活动信息列表（局部刷新）
 						//pageList(1,2);
 						/*
@@ -134,7 +143,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		})
 
 		//	页面加载完成后，触发一个方法
-		pageList(1,2);
+		pageList(1,5);
 
 		//	为查询按钮绑定事件，触发pageList方法
 		$("#searchBtn").click(function (){
@@ -146,7 +155,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			$("#hidden-startDate").val($.trim($("#search-startDate").val()));
 			$("#hidden-endDate").val($.trim($("#search-endDate").val()));
 
-			pageList(1,2);
+			pageList(1,5);
 		})
 
 		//	为全选的复选框绑定事件，触发全选操作
@@ -440,11 +449,11 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						<div class="form-group">
 							<label for="create-startDate" class="col-sm-2 control-label">开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control time" id="create-startDate" readonly>
+								<input type="text" class="form-control time" id="create-startDate" readonly placeholder="点击选择">
 							</div>
 							<label for="create-endDate" class="col-sm-2 control-label">结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control time" id="create-endDate" readonly>
+								<input type="text" class="form-control time" id="create-endDate" readonly placeholder="点击选择">
 							</div>
 						</div>
                         <div class="form-group">
@@ -503,11 +512,11 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						<div class="form-group">
 							<label for="edit-startDate" class="col-sm-2 control-label">开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control time" id="edit-startDate">
+								<input type="text" class="form-control time" id="edit-startDate" readonly placeholder="点击选择">
 							</div>
 							<label for="edit-endDate" class="col-sm-2 control-label">结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control time" id="edit-endDate">
+								<input type="text" class="form-control time" id="edit-endDate" readonly placeholder="点击选择">
 							</div>
 						</div>
 						
@@ -576,13 +585,13 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">开始日期</div>
-					  <input class="form-control" type="text" id="search-startDate" />
+					  <input class="form-control time" type="text" id="search-startDate"  readonly placeholder="点击选择"/>
 				    </div>
 				  </div>
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">结束日期</div>
-					  <input class="form-control" type="text" id="search-endDate">
+					  <input class="form-control time" type="text" id="search-endDate" readonly placeholder="点击选择">
 				    </div>
 				  </div>
 				  

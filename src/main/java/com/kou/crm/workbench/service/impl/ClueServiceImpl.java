@@ -1,5 +1,6 @@
 package com.kou.crm.workbench.service.impl;
 
+import com.kou.crm.exception.ActivityException;
 import com.kou.crm.exception.ClueException;
 import com.kou.crm.settings.dao.UserDao;
 import com.kou.crm.settings.domain.User;
@@ -110,7 +111,19 @@ public class ClueServiceImpl implements ClueService {
 
     @Override
     public boolean deleteClue(String[] ids) throws ClueException {
+        //  查询出需要删除的备注的数量
+        Integer count1 = clueRemarkDao.getCountByAids(ids);
+
+        //  删除备注，返回受到影响的条数（实际删除的数量）
+        Integer count2 = clueRemarkDao.deleteByAids(ids);
+
+        if (count1 != count2){
+            throw new ClueException("删除备注失败!");
+        }
+
+        //  删除市场活动
         Integer count = clueDao.deleteClue(ids);
+
         if (count != ids.length){
             throw new ClueException("删除失败！");
         }
@@ -302,6 +315,35 @@ public class ClueServiceImpl implements ClueService {
         if (count10 != 1)
             throw new ClueException("删除线索失败！");
 
+        return true;
+    }
+
+    @Override
+    public boolean saveClueRemark(ClueRemark clueRemark) throws ClueException {
+
+        int count = clueRemarkDao.saveClueRemark(clueRemark);
+
+        if (count != 1)
+            throw new ClueException("保存失败！");
+        return true;
+    }
+
+    @Override
+    public boolean deleteRemark(String id) throws ClueException {
+
+        int count = clueRemarkDao.deleteRemark(id);
+
+        if (count != 1)
+            throw new ClueException("删除失败！");
+        return true;
+    }
+
+    @Override
+    public boolean updateRemark(ClueRemark clueRemark) throws ClueException {
+        int count = clueRemarkDao.updateRemark(clueRemark);
+
+        if (count != 1)
+            throw new ClueException("更新失败！");
         return true;
     }
 

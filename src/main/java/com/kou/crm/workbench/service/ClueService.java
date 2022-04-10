@@ -29,4 +29,10 @@ public interface ClueService {
     List<ClueRemark> getRemarkListByCid(String clueId);
 
     boolean convert(String clueId, Tran tran, String createBy) throws ClueException;
+
+    boolean saveClueRemark(ClueRemark clueRemark) throws ClueException;
+
+    boolean deleteRemark(String id) throws ClueException;
+
+    boolean updateRemark(ClueRemark clueRemark) throws ClueException;
 }

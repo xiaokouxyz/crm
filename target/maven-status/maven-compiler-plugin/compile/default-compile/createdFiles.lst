@@ -4,6 +4,7 @@ com\kou\crm\settings\domain\DicType.class
 com\kou\crm\workbench\domain\Customer.class
 com\kou\crm\workbench\dao\ContactsDao.class
 com\kou\crm\exception\MyException.class
+com\kou\crm\handler\CustomerExceptionHandler.class
 com\kou\crm\exception\LoginException.class
 com\kou\crm\workbench\dao\ActivityRemarkDao.class
 com\kou\crm\workbench\web\controller\TranController.class
@@ -11,12 +12,14 @@ com\kou\crm\settings\service\UserService.class
 com\kou\crm\web\filter\LoginFilter.class
 com\kou\crm\workbench\service\ActivityService.class
 com\kou\crm\settings\service\impl\DicServiceImpl.class
+com\kou\crm\workbench\web\controller\ContactsController.class
 com\kou\crm\handler\ActivityExceptionHandler.class
 com\kou\crm\handler\ClueExceptionHandler.class
 com\kou\crm\workbench\web\controller\ClueController.class
 com\kou\crm\workbench\domain\Contacts.class
 com\kou\crm\workbench\service\CustomerService.class
 com\kou\crm\workbench\domain\TranHistory.class
+com\kou\crm\exception\CustomerException.class
 com\kou\crm\utils\MD5Util.class
 com\kou\crm\settings\domain\DicValue.class
 com\kou\crm\workbench\service\TranService.class
@@ -36,6 +39,7 @@ com\kou\crm\workbench\dao\ClueDao.class
 com\kou\crm\workbench\domain\CustomerRemark.class
 com\kou\crm\settings\service\DicService.class
 com\kou\crm\vo\PaginationVo.class
+com\kou\crm\workbench\service\ContactsService.class
 com\kou\crm\settings\web\controller\LoginController.class
 com\kou\crm\workbench\service\ClueService.class
 com\kou\crm\exception\ClueException.class
@@ -50,7 +54,10 @@ com\kou\crm\workbench\domain\ContactsActivityRelation.class
 com\kou\crm\utils\UUIDUtil.class
 com\kou\crm\workbench\service\impl\ActivityServiceImpl.class
 com\kou\crm\workbench\dao\TranHistoryDao.class
+com\kou\crm\workbench\service\impl\ContactsServiceImpl.class
+com\kou\crm\handler\ContactsExceptionHandler.class
 com\kou\crm\settings\web\interceptor\LoginInterceptor.class
+com\kou\crm\exception\ContactsException.class
 com\kou\crm\workbench\domain\ClueActivityRelation.class
 com\kou\crm\exception\ActivityException.class
 com\kou\crm\workbench\domain\Clue.class

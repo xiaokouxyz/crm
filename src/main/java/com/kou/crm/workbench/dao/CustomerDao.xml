@@ -77,9 +77,65 @@
         from tbl_customer
         where name like '%' #{name} '%'
     </select>
+
+    <select id="getCustomerById" resultType="Customer">
+        select
+            id,
+            owner,
+            name,
+            website,
+            phone,
+            contactSummary,
+            nextContactTime,
+            description,
+            address
+        from tbl_customer
+        where id = #{id}
+    </select>
+
+    <update id="updateCustomer">
+        update tbl_customer set
+            owner=#{owner},
+            name=#{name},
+            website=#{website},
+            phone=#{phone},
+            editBy=#{editBy},
+            editTime=#{editTime},
+            contactSummary=#{contactSummary},
+            nextContactTime=#{nextContactTime},
+            description=#{description},
+            address=#{address}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteCustomer">
+        delete from tbl_customer where id in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getCustomer" resultType="Customer">
+        select
+            cus.id,
+            u.name as owner,
+            cus.name,
+            cus.website,
+            cus.phone,
+            cus.createBy,
+            cus.createTime,
+            cus.editBy,
+            cus.editTime,
+            cus.contactSummary,
+            cus.nextContactTime,
+            cus.description,
+            cus.address
+        from tbl_customer cus
+        join tbl_user u
+        on cus.owner = u.id
+        where cus.id = #{id}
+    </select>
 </mapper>
-
-
 
 
 

@@ -8,6 +8,160 @@
         insert into tbl_contacts(id,owner,source,customerId,fullname,appellation,email,mphone,job,birth,createBy,createTime,description,contactSummary,nextContactTime,address)
         values (#{id},#{owner},#{source},#{customerId},#{fullname},#{appellation},#{email},#{mphone},#{job},#{birth},#{createBy},#{createTime},#{description},#{contactSummary},#{nextContactTime},#{address})
     </insert>
+
+    <select id="getContactList" resultType="Contacts">
+        select id,fullname,email,mphone
+        from tbl_contacts
+        where customerId=#{id}
+    </select>
+
+    <select id="getConCountByAids" resultType="java.lang.Integer">
+        select count(*)
+        from tbl_contacts
+        where customerId in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </select>
+
+    <delete id="deleteConByAids">
+        delete from tbl_contacts
+        where customerId in
+        <foreach collection="array" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteCon">
+        delete from tbl_contacts where id=#{id}
+    </delete>
+
+    <select id="getContactsListByNameAndNotByContactsId" resultType="Contacts">
+        select id,fullname,email,mphone
+        from tbl_contacts
+        where fullname like '%' #{contactsName} '%' and id not in (#{contactsId})
+    </select>
+
+    <select id="getTotalByCondition" resultType="java.lang.Integer">
+        select count(*)
+        from tbl_contacts con
+            join tbl_user u
+                on con.owner=u.id
+            join tbl_customer cus
+                on con.customerId=cus.id
+        <where>
+            <if test="owner != null and owner != ''">
+                and u.name like '%' #{owner} '%'
+            </if>
+            <if test="fullname != null and fullname != ''">
+                and con.fullname like '%' #{fullname} '%'
+            </if>
+            <if test="customerId != null and customerId != ''">
+                and cus.name like '%' #{customerId} '%'
+            </if>
+            <if test="source != null and source != ''">
+                and con.source like '%' #{source} '%'
+            </if>
+            <if test="owner != null and owner != ''">
+                and con.birth like '%' #{birth} '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="getContactsByCondition" resultType="Contacts">
+        select con.id,u.name as owner,con.fullname,cus.name as customerId,con.source,con.birth
+        from tbl_contacts con
+        join tbl_user u
+        on con.owner=u.id
+        join tbl_customer cus
+        on con.customerId=cus.id
+        <where>
+            <if test="contacts.owner != null and contacts.owner != ''">
+                and u.name like '%' #{contacts.owner} '%'
+            </if>
+            <if test="contacts.fullname != null and contacts.fullname != ''">
+                and con.fullname like '%' #{contacts.fullname} '%'
+            </if>
+            <if test="contacts.customerId != null and contacts.customerId != ''">
+                and cus.name like '%' #{contacts.customerId} '%'
+            </if>
+            <if test="contacts.source != null and contacts.source != ''">
+                and con.source like '%' #{contacts.source} '%'
+            </if>
+            <if test="contacts.birth != null and contacts.birth != ''">
+                and con.birth like '%' #{contacts.birth} '%'
+            </if>
+        </where>
+        order by con.createTime desc
+        limit #{skipCount},#{pageSize}
+    </select>
+
+    <select id="getContactById" resultType="Contacts">
+        select
+            con.id,
+            con.owner,
+            con.source,
+            cus.name as customerId,
+            con.fullname,
+            con.appellation,
+            con.email,
+            con.mphone,
+            con.job,
+            con.birth,
+            con.description,
+            con.contactSummary,
+            con.nextContactTime,
+            con.address
+        from tbl_contacts con
+        join tbl_customer cus
+        on con.customerId=cus.id
+        where con.id=#{id}
+    </select>
+
+    <update id="updateContact">
+        update tbl_contacts set
+            owner=#{owner},source=#{source},customerId=#{customerId},fullname=#{fullname},appellation=#{appellation},
+            email=#{email},mphone=#{mphone},job=#{job},birth=#{birth},editBy=#{editBy},editTime=#{editTime},description=#{description},
+            contactSummary=#{contactSummary},nextContactTime=#{nextContactTime},address=#{address}
+        where id=#{id}
+    </update>
+
+
+    <delete id="deleteContacts">
+        delete from tbl_contacts where id in
+        <foreach collection="array" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="detail" resultType="Contacts">
+        select
+            con.id,
+            u.name as owner,
+            con.source,
+            cus.name as customerId,
+            con.fullname,
+            con.appellation,
+            con.email,
+            con.mphone,
+            con.job,
+            con.birth,
+            con.createBy,
+            con.createTime,
+            con.editBy,
+            con.editTime,
+            con.description,
+            con.contactSummary,
+            con.nextContactTime,
+            con.address
+        from tbl_contacts con
+        join tbl_user u
+        on con.owner = u.id
+        join tbl_customer cus
+        on con.customerId = cus.id
+        where
+        con.id = #{id}
+    </select>
 </mapper>
 
 

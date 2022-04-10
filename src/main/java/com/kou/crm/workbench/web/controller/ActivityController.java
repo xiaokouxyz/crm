@@ -241,4 +241,12 @@ public class ActivityController {
 
         return map;
     }
+
+    @RequestMapping("/getCharts.do")
+    @ResponseBody
+    public Map<String,Object> getCharts(){
+        Map<String,Object> map = activityService.getCharts();
+
+        return map;
+    }
 }

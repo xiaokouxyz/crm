@@ -105,7 +105,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			})
 		})
 
-        pageList(1,2);
+        pageList(1,5);
 
 		//	为全选的复选框绑定事件,触发全选操作
 		$("#checkbox").click(function (){
@@ -126,7 +126,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			$("#hidden-mphone").val($.trim($("#search-mphone").val()));
 			$("#hidden-state").val($.trim($("#search-state").val()));
 
-			pageList(1,2);
+			pageList(1,5);
 		})
 
 		//	为修改按钮绑定事件
@@ -468,7 +468,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<div class="form-group">
 								<label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 								<div class="col-sm-10" style="width: 300px;">
-									<input type="text" class="form-control time" id="create-nextContactTime">
+									<input type="text" class="form-control time" id="create-nextContactTime" readonly placeholder="点击选择">
 								</div>
 							</div>
 						</div>
@@ -608,7 +608,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<div class="form-group">
 								<label for="edit-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 								<div class="col-sm-10" style="width: 300px;">
-									<input type="text" class="form-control" id="edit-nextContactTime">
+									<input type="text" class="form-control" id="edit-nextContactTime" readonly placeholder="点击选择">
 								</div>
 							</div>
 						</div>

@@ -134,4 +134,49 @@
         on a.owner = u.id
         where a.name like '%' #{activityName} '%'
     </select>
+
+    <select id="getActivityListByNameAndNotByActivityId" resultType="Activity">
+        select a.id,u.name as owner,a.name,a.startDate,a.endDate
+        from tbl_activity a
+        join tbl_user u
+        on a.owner=u.id
+        where a.name like '%' #{activityName} '%' and a.id not in (#{activityId})
+    </select>
+
+
+    <select id="getActivityByContactId" resultType="Activity">
+        select a.id,a.name,a.startDate,a.endDate,u.name as owner
+        from tbl_activity a
+        join tbl_user u
+        on u.id = a.owner
+        join tbl_contacts_activity_relation car
+        on car.activityId = a.id
+        where
+            car.contactsId = #{id}
+    </select>
+
+
+    <select id="getActivityListByNameAndNotByContactsId" resultType="Activity">
+        select a.id,u.name as owner,a.name,a.startDate,a.endDate
+        from tbl_activity a
+        join tbl_user u
+        on a.owner=u.id
+        where a.name like '%' #{activityName} '%' and a.id not in (
+            select activityId
+            from tbl_contacts_activity_relation
+            where contactsId = #{contactsId}
+            )
+    </select>
+    
+    <select id="getTotal" resultType="java.lang.Integer">
+        select count(*) from tbl_activity
+    </select>
+    
+    <select id="getCharts" resultType="java.util.Map">
+        select count(*) as value,u.name
+        from tbl_activity a
+        join tbl_user u
+        on a.owner=u.id
+        group by a.owner
+    </select>
 </mapper>

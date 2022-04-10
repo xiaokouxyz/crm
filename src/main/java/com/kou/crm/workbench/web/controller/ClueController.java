@@ -203,4 +203,52 @@ public class ClueController {
 
         return modelAndView;
     }
+
+    //  保存线索备注
+    @RequestMapping("/saveClueRemark.do")
+    @ResponseBody
+    public Map<String,Object> saveClueRemark(ClueRemark clueRemark) throws ClueException{
+        Map<String,Object> map = new HashMap<>();
+        boolean success = false;
+        if (clueRemark != null){
+
+            String id = UUIDUtil.getUUID();
+            String createTime = DateTimeUtil.getSysTime();
+
+            clueRemark.setId(id);
+            clueRemark.setCreateTime(createTime);
+
+            success = clueService.saveClueRemark(clueRemark);
+        }
+        map.put("success",success);
+        return map;
+    }
+
+    //  删除线索备注
+    @RequestMapping("/deleteRemark.do")
+    @ResponseBody
+    public Map<String,Object> deleteRemark(String id) throws ClueException {
+
+        Map<String,Object> map = new HashMap<>();
+        boolean success = clueService.deleteRemark(id);
+
+        map.put("success",success);
+        return map;
+    }
+
+    //  更新备注
+    @RequestMapping("/updateRemark.do")
+    @ResponseBody
+    public Map<String,Object> updateRemark(ClueRemark clueRemark) throws ClueException{
+
+        Map<String,Object> map = new HashMap<>();
+        String editTime = DateTimeUtil.getSysTime();
+        clueRemark.setEditTime(editTime);
+        boolean success = clueService.updateRemark(clueRemark);
+
+        map.put("clueRemark",clueRemark);
+        map.put("success",success);
+
+        return map;
+    }
 }

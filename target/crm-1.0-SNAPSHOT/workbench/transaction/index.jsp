@@ -24,7 +24,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
 	$(function(){
 
-		pageList(1,2);
+		pageList(1,5);
 
 		$("#searchBtn").click(function (){
 			$("#hidden-owner").val($.trim($("#search-owner").val()));
@@ -35,7 +35,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			$("#hidden-source").val($.trim($("#search-source").val()));
 			$("#hidden-contactsId").val($.trim($("#search-contactsId").val()));
 
-			pageList(1,2);
+			pageList(1,5);
 		})
 
 		//	使用总复选框控制
@@ -46,6 +46,54 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		//	使用其他控制总复选框
 		$("#tranBody").on("click",$("input[name=checkboxItem]"),function (){
 			$("#checkbox").prop("checked",$("input[name=checkboxItem]").length == $("input[name=checkboxItem]:checked").length);
+		})
+
+		//	为修改按钮绑定事件
+		$("#editBtn").click(function (){
+
+			var $checkItem = $("input[name=checkboxItem]:checked");
+			if ($checkItem.length == 0){
+				alert("亲亲，请选择要修改的交易！");
+			}else if ($checkItem.length > 1){
+				alert("亲亲，只能选择一条修改的交易！");
+			}else {
+				//	只选择了一条交易
+				var id = $checkItem.val();
+				window.location.href='workbench/transaction/edit.do?tranId='+ id;
+			}
+		})
+
+		//	为删除按钮绑定事件
+		$("#deleteBtn").click(function (){
+
+			var $checkboxItems = $("input[name=checkboxItem]:checked");
+			if ($checkboxItems.length == 0){
+				alert("亲亲，请选择要删除的交易");
+			}else {
+				if (confirm("亲亲，确定要删除这些交易吗?")){
+
+					var params = "";
+					$.each($checkboxItems,function (i,checkboxItem){
+						params += "id=" + $(checkboxItem).val();
+						if (i < $checkboxItems.length -1 ){
+							params += "&";
+						}
+					})
+					$.ajax({
+
+						url: "workbench/transaction/deleteTran.do",
+						data: params,
+						type: "post",
+						success: function (data){
+							if (data.success){
+								pageList(1,$("#tranPageList").bs_pagination('getOption', 'rowsPerPage'));
+							}else {
+								alert(data.msg);
+							}
+						}
+					})
+				}
+			}
 		})
 	});
 
@@ -223,8 +271,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 10px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" onclick="window.location.href='workbench/transaction/add.do';"><span class="glyphicon glyphicon-plus"></span> 创建</button>
-				  <button type="button" class="btn btn-default" onclick="window.location.href='edit.html';"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
-				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+				  <button type="button" class="btn btn-default" id="editBtn" ><span class="glyphicon glyphicon-pencil"></span> 修改</button>
+				  <button type="button" class="btn btn-danger" id="deleteBtn"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				
 				
@@ -268,43 +316,12 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				</table>
 			</div>
 
-			<div id="tranPageList">
 
+			<div style="height: 50px; position: relative;top: 20px;">
+				<div id="tranPageList">
+
+				</div>
 			</div>
-			<!--<div style="height: 50px; position: relative;top: 20px;">
-				<div>
-					<button type="button" class="btn btn-default" style="cursor: default;">共<b>50</b>条记录</button>
-				</div>
-				<div class="btn-group" style="position: relative;top: -34px; left: 110px;">
-					<button type="button" class="btn btn-default" style="cursor: default;">显示</button>
-					<div class="btn-group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							10
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">20</a></li>
-							<li><a href="#">30</a></li>
-						</ul>
-					</div>
-					<button type="button" class="btn btn-default" style="cursor: default;">条/页</button>
-				</div>
-				<div style="position: relative;top: -88px; left: 285px;">
-					<nav>
-						<ul class="pagination">
-							<li class="disabled"><a href="#">首页</a></li>
-							<li class="disabled"><a href="#">上一页</a></li>
-							<li class="active"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
-							<li><a href="#">下一页</a></li>
-							<li class="disabled"><a href="#">末页</a></li>
-						</ul>
-					</nav>
-				</div>
-			</div>-->
 			
 		</div>
 		
